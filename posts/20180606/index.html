@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="A new Hugo site."><title>6/6 紀錄 - o1vv1rnna</title><link rel="shortcut icon" href=/blog/gura.ico><link rel=stylesheet href=/blog/css/main.min.c5514d3530979d291f3497facc20da1cec870028dbc2a3630b64bab8721bbe49.css integrity="sha256-xVFNNTCXnSkfNJf6zCDaHOyHACjbwqNjC2S6uHIbvkk=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://kl23711579.github.io/blog/tn.png"><meta name=twitter:title content="6/6 紀錄"><meta name=twitter:description content="Linux Crontab&nbsp;¶"><meta property="og:title" content="6/6 紀錄"><meta property="og:description" content="Linux Crontab&nbsp;¶"><meta property="og:type" content="article"><meta property="og:url" content="https://kl23711579.github.io/blog/posts/20180606/"><meta property="og:image" content="https://kl23711579.github.io/blog/tn.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-06-06T01:12:36+08:00"><meta property="article:modified_time" content="2018-06-06T01:12:36+08:00"><meta property="og:site_name" content="o1vv1rnna"><title>6/6 紀錄</title></head><body><header class="wrap flex-container"><h1>6/6 紀錄</h1></header><main class=wrap><div class=flex-container><aside role=complementary>Wed Jun 06, 2018 &#183; 147 words<div class=tag-container><span class=tag><a href=/blog/tags/linux/>Linux</a></span></div></aside><hr><article role=article><h1 id=linux-crontab class=anchor-link><a href=#linux-crontab>Linux Crontab<span class=pilcrow>&nbsp;¶</span></a></h1><p>其實根本沒有要打甚麼教學，僅僅是紀錄一些指令罷了</p><h3 id=排程狀態 class=anchor-link><a href=#%e6%8e%92%e7%a8%8b%e7%8b%80%e6%85%8b>排程狀態<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>sudo service cron status
+</code></pre><h3 id=啟動排程 class=anchor-link><a href=#%e5%95%9f%e5%8b%95%e6%8e%92%e7%a8%8b>啟動排程<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>sudo service cron start
+</code></pre><h3 id=關閉排程 class=anchor-link><a href=#%e9%97%9c%e9%96%89%e6%8e%92%e7%a8%8b>關閉排程<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>sudo service cron stop
+</code></pre><h3 id=查閱-crontab-的工作內容 class=anchor-link><a href=#%e6%9f%a5%e9%96%b1-crontab-%e7%9a%84%e5%b7%a5%e4%bd%9c%e5%85%a7%e5%ae%b9>查閱 crontab 的工作內容<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>crontab -l
+</code></pre><h3 id=編寫排程 class=anchor-link><a href=#%e7%b7%a8%e5%af%ab%e6%8e%92%e7%a8%8b>編寫排程<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>vim crontab
+</code></pre><p>或</p><pre><code>crontab -e
+</code></pre><h3 id=撰寫方式 class=anchor-link><a href=#%e6%92%b0%e5%af%ab%e6%96%b9%e5%bc%8f>撰寫方式<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code># Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+# 每分鐘執行 index.php 一次
+* * * * * php index.php
+</code></pre><hr><h1 id=強力推薦 class=anchor-link><a href=#%e5%bc%b7%e5%8a%9b%e6%8e%a8%e8%96%a6>強力推薦<span class=pilcrow>&nbsp;¶</span></a></h1><p><a href=https://linux.vbird.org/linux_basic/0430cron.php>Linux大神，鳥哥的教學</a></p><hr><h1 id=other-command class=anchor-link><a href=#other-command>Other Command<span class=pilcrow>&nbsp;¶</span></a></h1><h3 id=回到上一次目錄 class=anchor-link><a href=#%e5%9b%9e%e5%88%b0%e4%b8%8a%e4%b8%80%e6%ac%a1%e7%9b%ae%e9%8c%84>回到上一次目錄<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>cd -
+</code></pre><blockquote><p>就是回到剛剛的資料夾</p></blockquote><blockquote><p>假設原本在 /home/frank</p></blockquote><blockquote><p>下了指令 <code>cd /etc</code></p></blockquote><blockquote><p>跑到 /etc 了</p></blockquote><blockquote><p>再下指令 <code>cd -</code></p></blockquote><blockquote><p>就回到 /home/frank</p></blockquote><h3 id=工作管理員 class=anchor-link><a href=#%e5%b7%a5%e4%bd%9c%e7%ae%a1%e7%90%86%e5%93%a1>工作管理員<span class=pilcrow>&nbsp;¶</span></a></h3><pre><code>ps aux
+</code></pre><blockquote><p>可搭配 grep</p></blockquote><blockquote><p><code>ps aux | grep php</code></p></blockquote><hr><p>最近聯絡到好久不見的朋友了，雖然她還在美國，聊了一下天感覺還是不錯低</p></article></div><nav role=navigation class="flex-container bottom-menu"><hr><p><a href=/blog/posts>back</a>
+&#183;
+<a href=/blog/posts>POSTs</a>
+&#183;
+<a href=/blog/about>WHOAMI</a>
+&#183;
+<a href=/blog>main</a></p></nav></main><footer class="flex-container footer">Call me San, a theme for Hugo.</footer></body></html>

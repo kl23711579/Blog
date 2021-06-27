@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="A new Hugo site."><title>4/11 紀錄 - o1vv1rnna</title><link rel="shortcut icon" href=/blog/gura.ico><link rel=stylesheet href=/blog/css/main.min.c5514d3530979d291f3497facc20da1cec870028dbc2a3630b64bab8721bbe49.css integrity="sha256-xVFNNTCXnSkfNJf6zCDaHOyHACjbwqNjC2S6uHIbvkk=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://kl23711579.github.io/blog/tn.png"><meta name=twitter:title content="4/11 紀錄"><meta name=twitter:description content="Laravel Debugbar&nbsp;¶
+
+安裝&nbsp;¶
+composer require barryvdh/laravel-debugbar --dev
+"><meta property="og:title" content="4/11 紀錄"><meta property="og:description" content="Laravel Debugbar&nbsp;¶
+
+安裝&nbsp;¶
+composer require barryvdh/laravel-debugbar --dev
+"><meta property="og:type" content="article"><meta property="og:url" content="https://kl23711579.github.io/blog/posts/20180411/"><meta property="og:image" content="https://kl23711579.github.io/blog/tn.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-04-11T00:21:11+08:00"><meta property="article:modified_time" content="2018-04-11T00:21:11+08:00"><meta property="og:site_name" content="o1vv1rnna"><title>4/11 紀錄</title></head><body><header class="wrap flex-container"><h1>4/11 紀錄</h1></header><main class=wrap><div class=flex-container><aside role=complementary>Wed Apr 11, 2018 &#183; 156 words<div class=tag-container><span class=tag><a href=/blog/tags/laravel/>laravel</a></span></div></aside><hr><article role=article><h1 id=laravel-debugbar class=anchor-link><a href=#laravel-debugbar>Laravel Debugbar<span class=pilcrow>&nbsp;¶</span></a></h1><h2 id=安裝 class=anchor-link><a href=#%e5%ae%89%e8%a3%9d>安裝<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>composer require barryvdh/laravel-debugbar --dev
+</code></pre><p>根據Laravel debugbar官網的說明檔，並沒有加上 <strong>–dev</strong>，這會使得 Laravel debugbar 被裝在 <strong>composer.json</strong> 的 <strong>require</strong> 區段，而非 <strong>require-dev</strong> 區段，這會造成在正式上線主機也會安裝 Laravel debugbar，這是不需要的。</p><blockquote><p>For Laravel &lt; 5.5</p></blockquote><blockquote><p><code>composer require barryvdh/laravel-debugbar:~2.4 --dev</code></p></blockquote><h2 id=新增service-provider class=anchor-link><a href=#%e6%96%b0%e5%a2%9eservice-provider>新增Service Provider<span class=pilcrow>&nbsp;¶</span></a></h2><p>Composer 只是將 Laravel debugbar 安裝到目前專案目錄的 <code>/vendor/barryvdh/laravel-debugbar</code> 目錄下，此時 Laravel 還不知道有這個 package，必須透過 service provider 的註冊載入，Laravel debugbar 才會啟動。</p><pre><code># /app/Providers/AppServiceProvider.php
+
+namespace App\Providers;  
+   
+use Illuminate\Support\ServiceProvider;  
+   
+class AppServiceProvider extends ServiceProvider  
+{  
+    /**  
+    * Bootstrap any application services.  
+    *  
+    * @return void  
+    */  
+    public function boot()  
+    {  
+        //  
+    }  
+
+    /**  
+    * Register any application services.  
+    *  
+    * @return void  
+    */  
+    public function register()  
+    {  
+        if ($this-&gt;app-&gt;environment() == 'local')  
+        {  
+            $this-&gt;app-&gt;register('Barryvdh\\Debugbar\\ServiceProvider');  
+        }  
+    }  
+}
+</code></pre><p>在Laravel debugbar官網的說明檔，是教人直接在 <code>config/app.php</code> 的 <code>providers</code> 加入 <code>Barryvdh\Debugbar\ServiceProvider::class</code> ，這樣雖然可行，但會導致正式上線主機也會載入 Laravel debugbar，雖然 <code>APP_DEBUG=false</code> 會使 Laravel debugbar 不會在正式上線主機執行，但還是會影響 Laravel 啟動時間，也較浪費記憶體。</p><h2 id=設定facade class=anchor-link><a href=#%e8%a8%ad%e5%ae%9afacade>設定Facade<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code># /config/app.php
+
+'aliases' =&gt; [
+    (略)
+    'Validator' =\&gt; Illuminate\\Support\\Facades\\Validator::class,
+    'View'      =\&gt; Illuminate\\Support\\Facades\\View::class,
+    // Laravel Debugbar
+    'Debugbar' =\&gt; Barryvdh\\Debugbar\\Facade::class,
+],
+</code></pre><h2 id=複製設定檔 class=anchor-link><a href=#%e8%a4%87%e8%a3%bd%e8%a8%ad%e5%ae%9a%e6%aa%94>複製設定檔<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>php artisan vendor:publish
+</code></pre><h2 id=確認-env class=anchor-link><a href=#%e7%a2%ba%e8%aa%8d-env>確認 .env<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code># /.env
+APP_ENV=local
+APP_DEBUG=true
+</code></pre><p>Laravel Debugbar只有在<code>APP_ENV=local</code>與<code>APP_DEBUG=true</code>下才會啟動，確認<code>.env</code>設定正確。</p><h1 id=使用 class=anchor-link><a href=#%e4%bd%bf%e7%94%a8>使用<span class=pilcrow>&nbsp;¶</span></a></h1><h2 id=自行加入debug資訊 class=anchor-link><a href=#%e8%87%aa%e8%a1%8c%e5%8a%a0%e5%85%a5debug%e8%b3%87%e8%a8%8a>自行加入Debug資訊<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>Debugbar::info($object);
+Debugbar::error('Error!');
+Debugbar::warning('Watch out...');
+</code></pre><p>會顯示在 <code>Message</code> 裡</p></article></div><nav role=navigation class="flex-container bottom-menu"><hr><p><a href=/blog/posts>back</a>
+&#183;
+<a href=/blog/posts>POSTs</a>
+&#183;
+<a href=/blog/about>WHOAMI</a>
+&#183;
+<a href=/blog>main</a></p></nav></main><footer class="flex-container footer">Call me San, a theme for Hugo.</footer></body></html>

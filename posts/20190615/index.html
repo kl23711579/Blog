@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="A new Hugo site."><title>6/15 Golang紀錄 - o1vv1rnna</title><link rel="shortcut icon" href=/blog/gura.ico><link rel=stylesheet href=/blog/css/main.min.c5514d3530979d291f3497facc20da1cec870028dbc2a3630b64bab8721bbe49.css integrity="sha256-xVFNNTCXnSkfNJf6zCDaHOyHACjbwqNjC2S6uHIbvkk=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://kl23711579.github.io/blog/tn.png"><meta name=twitter:title content="6/15 Golang紀錄"><meta name=twitter:description content="Golang&nbsp;¶
+slice 太多了，分成兩篇"><meta property="og:title" content="6/15 Golang紀錄"><meta property="og:description" content="Golang&nbsp;¶
+slice 太多了，分成兩篇"><meta property="og:type" content="article"><meta property="og:url" content="https://kl23711579.github.io/blog/posts/20190615/"><meta property="og:image" content="https://kl23711579.github.io/blog/tn.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-06-15T12:54:32+10:00"><meta property="article:modified_time" content="2019-06-15T12:54:32+10:00"><meta property="og:site_name" content="o1vv1rnna"><title>6/15 Golang紀錄</title></head><body><header class="wrap flex-container"><h1>6/15 Golang紀錄</h1></header><main class=wrap><div class=flex-container><aside role=complementary>Sat Jun 15, 2019 &#183; 522 words<div class=tag-container><span class=tag><a href=/blog/tags/golang/>Golang</a></span></div></aside><hr><article role=article><h1 id=golang class=anchor-link><a href=#golang>Golang<span class=pilcrow>&nbsp;¶</span></a></h1><p>slice 太多了，分成兩篇</p><h1 id=9-slice class=anchor-link><a href=#9-slice>9. Slice<span class=pilcrow>&nbsp;¶</span></a></h1><blockquote><p>The type <code>[]T</code> is a slice with elements of type <code>T</code></p></blockquote><blockquote><p>The zero type of slice is <code>nil</code></p></blockquote><p>Slice like a reference to array, so it does not store any data</p><p>Slice 像是指向 array 的 reference</p><p><code>names[0:2]</code> 是從第 0 個 element 開始（包括在裡面），一直到第 2 個 element 結束（不包括在裡面）</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>names</span> <span style=color:#f92672>:=</span> [<span style=color:#ae81ff>4</span>]<span style=color:#66d9ef>string</span>{
+    <span style=color:#e6db74>&#34;Emma&#34;</span>,
+    <span style=color:#e6db74>&#34;AAA&#34;</span>,
+    <span style=color:#e6db74>&#34;Alice&#34;</span>,
+    <span style=color:#e6db74>&#34;dlwlrma&#34;</span>, 
+} 
+<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>names</span>)
+
+<span style=color:#a6e22e>a</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>names</span>[<span style=color:#ae81ff>0</span>:<span style=color:#ae81ff>2</span>]
+<span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>names</span>[<span style=color:#ae81ff>1</span>:<span style=color:#ae81ff>3</span>]
+<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span>)
+<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>] = <span style=color:#e6db74>&#34;XXX&#34;</span>
+<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span>)
+<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>names</span>)
+</code></pre></div><pre><code>// Result
+[Emma AAA Alice dlwlrma]
+[Emma AAA] [AAA Alice]
+[Emma XXX] [XXX Alice]
+[Emma XXX Alice dlwlrma]
+</code></pre><p>注意看，Slice 裡的 value 被改變，array 裡的 value 也會被<strong>改變</strong></p><p>在宣告時，dlwlrma <strong>後面</strong>還有一個 <code>,</code></p><h3 id=slice-length-and-capacity class=anchor-link><a href=#slice-length-and-capacity>slice length and capacity<span class=pilcrow>&nbsp;¶</span></a></h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>s</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>7</span>, <span style=color:#ae81ff>11</span>, <span style=color:#ae81ff>13</span>}
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#75715e>// Slice the slice to give it zero length.
+</span><span style=color:#75715e></span><span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[:<span style=color:#ae81ff>0</span>]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#75715e>// Extend its length.
+</span><span style=color:#75715e></span><span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[:<span style=color:#ae81ff>4</span>]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#75715e>// Drop its first two values.
+</span><span style=color:#75715e></span><span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[<span style=color:#ae81ff>2</span>:]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[:<span style=color:#ae81ff>5</span>]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span>){
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;len=%d cap=%d %v\n&#34;</span>, len(<span style=color:#a6e22e>s</span>), cap(<span style=color:#a6e22e>s</span>), <span style=color:#a6e22e>s</span>)
+}
+</code></pre></div><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// Restult
+</span><span style=color:#75715e></span><span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>6</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>6</span> [<span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span> <span style=color:#ae81ff>5</span> <span style=color:#ae81ff>7</span> <span style=color:#ae81ff>11</span> <span style=color:#ae81ff>13</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>0</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>6</span> []
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>4</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>6</span> [<span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span> <span style=color:#ae81ff>5</span> <span style=color:#ae81ff>7</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>2</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>4</span> [<span style=color:#ae81ff>5</span> <span style=color:#ae81ff>7</span>]
+<span style=color:#a6e22e>panic</span>: <span style=color:#a6e22e>runtime</span> <span style=color:#66d9ef>error</span>: <span style=color:#a6e22e>slice</span> <span style=color:#a6e22e>bounds</span> <span style=color:#a6e22e>out</span> <span style=color:#a6e22e>of</span> <span style=color:#66d9ef>range</span>
+</code></pre></div><p>可以看得出來 <code>s = s[:0]</code> 並沒有把 capacity 減少，只有減少長度</p><p>所以 <code>s = s[:4]</code> 才能到 <code>4</code>，這個 statement 也是在 extend slice 的 length</p><p>但是 <code>s = s[2:]</code> drop first two elements，capacity 只剩下 <code>4</code></p><p>所以 <code>s = s[:5]</code> 無法到 <code>5</code>，因為長度不夠，就跳 error 了</p><h4 id=所以說-length-就是長度但是不能超過-capacity class=anchor-link><a href=#%e6%89%80%e4%bb%a5%e8%aa%aa-length-%e5%b0%b1%e6%98%af%e9%95%b7%e5%ba%a6%e4%bd%86%e6%98%af%e4%b8%8d%e8%83%bd%e8%b6%85%e9%81%8e-capacity><strong>所以說 length 就是長度但是不能超過 capacity</strong><span class=pilcrow>&nbsp;¶</span></a></h4><h4 id=而-capacity-就是這個-slice-最多可以容納多少值 class=anchor-link><a href=#%e8%80%8c-capacity-%e5%b0%b1%e6%98%af%e9%80%99%e5%80%8b-slice-%e6%9c%80%e5%a4%9a%e5%8f%af%e4%bb%a5%e5%ae%b9%e7%b4%8d%e5%a4%9a%e5%b0%91%e5%80%bc><strong>而 capacity 就是這個 slice 最多可以容納多少值</strong><span class=pilcrow>&nbsp;¶</span></a></h4><h3 id=create-slice-with-make class=anchor-link><a href=#create-slice-with-make>Create slice with make<span class=pilcrow>&nbsp;¶</span></a></h3><p>function : <code>make([]T, length, capacity)</code></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>a</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>5</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;a&#34;</span>, <span style=color:#a6e22e>a</span>)
+
+<span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>5</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;b&#34;</span>, <span style=color:#a6e22e>b</span>)
+
+<span style=color:#a6e22e>c</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>b</span>[:<span style=color:#ae81ff>2</span>]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;c&#34;</span>, <span style=color:#a6e22e>c</span>)
+
+<span style=color:#a6e22e>d</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>[<span style=color:#ae81ff>2</span>:<span style=color:#ae81ff>5</span>]
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;d&#34;</span>, <span style=color:#a6e22e>d</span>)
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>x</span> []<span style=color:#66d9ef>int</span>) {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s len=%d cap=%d %v\n&#34;</span>, <span style=color:#a6e22e>s</span>, len(<span style=color:#a6e22e>x</span>), <span style=color:#a6e22e>cap</span>[<span style=color:#a6e22e>x</span>], <span style=color:#a6e22e>x</span>)
+}
+</code></pre></div><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// Result
+</span><span style=color:#75715e></span><span style=color:#a6e22e>a</span> <span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>5</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>5</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span>]
+<span style=color:#a6e22e>b</span> <span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>0</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>5</span> []
+<span style=color:#a6e22e>c</span> <span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>2</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>5</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span>]
+<span style=color:#a6e22e>d</span> <span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>3</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>3</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span> <span style=color:#ae81ff>0</span>]
+</code></pre></div><p>可以傳入兩個參數也可以傳入三個參數</p><p>這裡要注意的是 <code>c := b[:2]</code> 這個 statement 會成立是因為是在 extend 長度，所以只要不要超過 capacity 就好了</p><p>但是如果是寫在前面就是要 drop elements，可是現在 slice 裡面沒有 elements 可以 drop，所以會 error</p><p>It can be passed for two or three arguments.</p><p>We need to mention that the statement <code>c := b[:2]</code> can be succeeded because it extends the lenghth of slice</p><p>Therefore, do not over the capacity is the only thing need to worry.</p><p>However, if the statement is <code>c := b[1:]</code>, it menas that drop the first elements, but the slice does not have elements to drop, becaues the length is 0.</p><p>As a result, it will be error.</p><h3 id=appending-the-slice class=anchor-link><a href=#appending-the-slice>Appending the slice<span class=pilcrow>&nbsp;¶</span></a></h3><p>增加 slice 的 capacity</p><p><code>append(s []T, vs ...T) []T</code></p><p><code>slice = append(slice, elem1, elem2)</code></p><p><code>slice = append(slice, another slice...)</code></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span>
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = append(<span style=color:#a6e22e>s</span>, <span style=color:#ae81ff>0</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = append(<span style=color:#a6e22e>s</span>, <span style=color:#ae81ff>1</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = append(<span style=color:#a6e22e>s</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = append(<span style=color:#a6e22e>s</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>6</span>)
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#a6e22e>s</span> = append(<span style=color:#a6e22e>s</span>, cap(<span style=color:#a6e22e>s</span>))
+<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>)
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span>) {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;len=%d cap=%d %v\n&#34;</span>, len(<span style=color:#a6e22e>s</span>), cap(<span style=color:#a6e22e>s</span>), <span style=color:#a6e22e>s</span>)
+}
+</code></pre></div><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>//Result
+</span><span style=color:#75715e></span><span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>0</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>0</span> []
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>1</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>2</span> [<span style=color:#ae81ff>0</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>2</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>2</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>1</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>4</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>4</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>1</span> <span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>7</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>8</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>1</span> <span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span> <span style=color:#ae81ff>4</span> <span style=color:#ae81ff>5</span> <span style=color:#ae81ff>6</span>]
+<span style=color:#a6e22e>len</span>=<span style=color:#ae81ff>8</span> <span style=color:#a6e22e>cap</span>=<span style=color:#ae81ff>8</span> [<span style=color:#ae81ff>0</span> <span style=color:#ae81ff>1</span> <span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span> <span style=color:#ae81ff>4</span> <span style=color:#ae81ff>5</span> <span style=color:#ae81ff>6</span> <span style=color:#ae81ff>0</span>]
+</code></pre></div><p>這裡需要注意的是 <code>capacity</code> 是 0 -> 2 -> 4 -> 8 倍數增長的</p><hr><p>先這樣吧</p><p>最近懶懶散散的，可能放假太久的原因</p></article></div><nav role=navigation class="flex-container bottom-menu"><hr><p><a href=/blog/posts>back</a>
+&#183;
+<a href=/blog/posts>POSTs</a>
+&#183;
+<a href=/blog/about>WHOAMI</a>
+&#183;
+<a href=/blog>main</a></p></nav></main><footer class="flex-container footer">Call me San, a theme for Hugo.</footer></body></html>

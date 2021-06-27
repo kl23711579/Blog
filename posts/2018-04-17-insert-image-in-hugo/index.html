@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="A new Hugo site."><title>Insert Image in Hugo - o1vv1rnna</title><link rel="shortcut icon" href=/blog/gura.ico><link rel=stylesheet href=/blog/css/main.min.c5514d3530979d291f3497facc20da1cec870028dbc2a3630b64bab8721bbe49.css integrity="sha256-xVFNNTCXnSkfNJf6zCDaHOyHACjbwqNjC2S6uHIbvkk=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://kl23711579.github.io/blog/tn.png"><meta name=twitter:title content="Insert Image in Hugo"><meta name=twitter:description content="把圖片插入 hugo 中&nbsp;¶"><meta property="og:title" content="Insert Image in Hugo"><meta property="og:description" content="把圖片插入 hugo 中&nbsp;¶"><meta property="og:type" content="article"><meta property="og:url" content="https://kl23711579.github.io/blog/posts/2018-04-17-insert-image-in-hugo/"><meta property="og:image" content="https://kl23711579.github.io/blog/tn.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-04-17T20:40:12+08:00"><meta property="article:modified_time" content="2018-04-17T20:40:12+08:00"><meta property="og:site_name" content="o1vv1rnna"><title>Insert Image in Hugo</title></head><body><header class="wrap flex-container"><h1>Insert Image in Hugo</h1></header><main class=wrap><div class=flex-container><aside role=complementary>Tue Apr 17, 2018 &#183; 47 words<div class=tag-container><span class=tag><a href=/blog/tags/hugo/>hugo</a></span></div></aside><hr><article role=article><h1 id=把圖片插入-hugo-中 class=anchor-link><a href=#%e6%8a%8a%e5%9c%96%e7%89%87%e6%8f%92%e5%85%a5-hugo-%e4%b8%ad>把圖片插入 hugo 中<span class=pilcrow>&nbsp;¶</span></a></h1><p>其實這個問題困擾我很久了，今天終於試出辦法來了</p><h2 id=目前寫法 class=anchor-link><a href=#%e7%9b%ae%e5%89%8d%e5%af%ab%e6%b3%95>目前寫法<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>![IU](/blog/img/IU.jpg)
+# http://localhost:1313/blog/img/IU.jpg
+</code></pre><blockquote><p>不過會是回傳 304，找不到原因，反正能顯示出來就好了，未來有機會再修改</p></blockquote><h2 id=資料夾結構 class=anchor-link><a href=#%e8%b3%87%e6%96%99%e5%a4%be%e7%b5%90%e6%a7%8b>資料夾結構<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>blog
+├──static
+   ├──img
+      ├──IU.jpg
+</code></pre><h2 id=有沒有斜線的差異 class=anchor-link><a href=#%e6%9c%89%e6%b2%92%e6%9c%89%e6%96%9c%e7%b7%9a%e7%9a%84%e5%b7%ae%e7%95%b0>有沒有斜線的差異<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code># 兩者差在最前面的斜線
+
+![IU](/blog/img/IU.jpg)
+# http://localhost:1313/blog/img/IU.jpg
+
+![IU](blog/img/IU.jpg)
+# http://localhost:1313/blog/posts/2018-04-17-insert-image-in-hugo/blog/img/IU.jpg
+</code></pre><p>沒有斜線就會抓取現在這篇文章的 path，並放在 URL 的最前面</p><h2 id=static-資料夾 class=anchor-link><a href=#static-%e8%b3%87%e6%96%99%e5%a4%be>static 資料夾<span class=pilcrow>&nbsp;¶</span></a></h2><p>文件放在 static 資料夾底下可以用 <code>/foo/bar.jpg</code> 來讀取，不用再加上 static 路徑了</p><pre><code>.
+├──static
+   ├──foo
+      ├──bar.jpg
+</code></pre><h2 id=shortcode寫法 class=anchor-link><a href=#shortcode%e5%af%ab%e6%b3%95>shortcode寫法<span class=pilcrow>&nbsp;¶</span></a></h2><p>這是 shortcode 的寫法</p><figure><img src=/blog/img/hugo_shortcode.png></figure><p>因為用打的會直接變成圖片，所以就用圖片表示了</p><p>圖片置中的問題現在找不到辦法QQ</p></article></div><nav role=navigation class="flex-container bottom-menu"><hr><p><a href=/blog/posts>back</a>
+&#183;
+<a href=/blog/posts>POSTs</a>
+&#183;
+<a href=/blog/about>WHOAMI</a>
+&#183;
+<a href=/blog>main</a></p></nav></main><footer class="flex-container footer">Call me San, a theme for Hugo.</footer></body></html>

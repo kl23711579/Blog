@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="A new Hugo site."><title>4/13 紀錄 - o1vv1rnna</title><link rel="shortcut icon" href=/blog/gura.ico><link rel=stylesheet href=/blog/css/main.min.c5514d3530979d291f3497facc20da1cec870028dbc2a3630b64bab8721bbe49.css integrity="sha256-xVFNNTCXnSkfNJf6zCDaHOyHACjbwqNjC2S6uHIbvkk=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://kl23711579.github.io/blog/tn.png"><meta name=twitter:title content="4/13 紀錄"><meta name=twitter:description content="Composer autoload&nbsp;¶
+
+Slim3 Request Response&nbsp;¶"><meta property="og:title" content="4/13 紀錄"><meta property="og:description" content="Composer autoload&nbsp;¶
+
+Slim3 Request Response&nbsp;¶"><meta property="og:type" content="article"><meta property="og:url" content="https://kl23711579.github.io/blog/posts/20180413/"><meta property="og:image" content="https://kl23711579.github.io/blog/tn.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-04-13T00:21:11+08:00"><meta property="article:modified_time" content="2018-04-13T00:21:11+08:00"><meta property="og:site_name" content="o1vv1rnna"><title>4/13 紀錄</title></head><body><header class="wrap flex-container"><h1>4/13 紀錄</h1></header><main class=wrap><div class=flex-container><aside role=complementary>Fri Apr 13, 2018 &#183; 226 words<div class=tag-container><span class=tag><a href=/blog/tags/composer/>composer</a></span>
+<span class=tag><a href=/blog/tags/slim3/>Slim3</a></span></div></aside><hr><article role=article><h1 id=composer-autoload class=anchor-link><a href=#composer-autoload>Composer autoload<span class=pilcrow>&nbsp;¶</span></a></h1><h1 id=slim3-request-response class=anchor-link><a href=#slim3-request-response>Slim3 Request Response<span class=pilcrow>&nbsp;¶</span></a></h1><hr><h1 id=composer-autoload-1 class=anchor-link><a href=#composer-autoload-1>Composer autoload<span class=pilcrow>&nbsp;¶</span></a></h1><p><a href=https://getcomposer.org/doc/04-schema.md#classmap>reference</a>
+<a href=https://laravel-china.org/topics/1002/deep-composer-autoload>reference2</a></p><p>有四種</p><ol><li>PSR-4</li><li>PSR-0</li><li>classmap</li><li>files</li></ol><h2 id=psr-4 class=anchor-link><a href=#psr-4>PSR-4<span class=pilcrow>&nbsp;¶</span></a></h2><ul><li>Under the <code>psr-4 key</code> you define a mapping from namespaces to paths, relative to the package root.</li><li>Namespace prefixes must end in \ to avoid conflicts between similar prefixes.</li><li>可以在 <code>vendor/composer/autoload_psr4.php</code> 找到 key=>value array</li></ul><pre><code>{
+    &quot;autoload&quot;: {
+        &quot;psr-4&quot;: {
+            &quot;&quot;: &quot;classes/&quot;,
+            &quot;Foo\\&quot;: &quot;bar/&quot;,
+            &quot;Foo\\Bar\\&quot;: &quot;bar/&quot;,
+            &quot;Foo\\&quot;: &quot;bar2/bar1/&quot;,
+            &quot;Monolog\\&quot;: [&quot;src/&quot;, &quot;lib/&quot;]  # multi dir
+        }
+    }
+}
+</code></pre><h4 id=對應路徑 class=anchor-link><a href=#%e5%b0%8d%e6%87%89%e8%b7%af%e5%be%91>對應路徑<span class=pilcrow>&nbsp;¶</span></a></h4><p>The prifix <code>Foo</code> will not present in the file path</p><pre><code>src/classes
+src/bar/
+src/Bar/bar
+src/bar2/bar1/
+</code></pre><h2 id=classmap class=anchor-link><a href=#classmap>classmap<span class=pilcrow>&nbsp;¶</span></a></h2><ul><li>讀取 dir 底下所有檔案</li></ul><pre><code>{
+    &quot;autoload&quot;: {
+        &quot;classmap&quot;: [
+            &quot;controllers&quot;,
+            &quot;models&quot;
+        ]
+    }
+}
+</code></pre><p>讀取 controllers 和 models 底下所有檔案</p><h2 id=file class=anchor-link><a href=#file>file<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>{
+    &quot;files&quot;: [
+        &quot;path/to/file.php&quot;
+    ]
+}
+</code></pre><h2 id=psr-0 class=anchor-link><a href=#psr-0>PSR-0<span class=pilcrow>&nbsp;¶</span></a></h2><blockquote><p>過時了，不講</p></blockquote><hr><h1 id=slim3-container-resolution class=anchor-link><a href=#slim3-container-resolution>Slim3 Container Resolution<span class=pilcrow>&nbsp;¶</span></a></h1><p><a href=https://www.slimframework.com/docs/v3/objects/router.html#container-resolution>reference</a></p><h2 id=問題 class=anchor-link><a href=#%e5%95%8f%e9%a1%8c>問題<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>class GameController{
+    protected $ci;
+    
+    ...
+    
+    public function __construct($ci) 
+    {
+        $this-&gt;ci = $ci
+    }
+    
+    ...
+}
+</code></pre><p>當初這段怎麼看都不懂，搞不懂 <code>$ci</code> 到底從哪裡來的</p><h2 id=原因 class=anchor-link><a href=#%e5%8e%9f%e5%9b%a0>原因<span class=pilcrow>&nbsp;¶</span></a></h2><p>Alternatively, if the class does not have an entry in the container, then Slim will pass the container’s instance to the constructor.</p><blockquote><p>slim 會自動引入到 construct 裡</p></blockquote><h3 id=ps class=anchor-link><a href=#ps>PS<span class=pilcrow>&nbsp;¶</span></a></h3><ul><li><code>$this->ci->get('logger')</code> 和 <code>$this->ci->logger</code> 是一樣的意思</li><li>使用 <code>composer dump-autoload</code> 更新 autoload</li></ul><h1 id=slim3-request-response-1 class=anchor-link><a href=#slim3-request-response-1>Slim3 Request Response<span class=pilcrow>&nbsp;¶</span></a></h1><h2 id=問題-1 class=anchor-link><a href=#%e5%95%8f%e9%a1%8c-1>問題<span class=pilcrow>&nbsp;¶</span></a></h2><pre><code>class GameController{
+    ...
+    
+    public function openGame($request, $response, array $args)
+    {
+        ...
+        $params = $request-&gt;getParams();
+        ...
+    }
+    ...
+}
+</code></pre><p>找不到任何地方有引入 <code>use Slim\Http\Response;</code> <code>use Slim\Http\Request;</code> 之類的東西，覺得很奇怪為啥能執行</p><h2 id=原因-1 class=anchor-link><a href=#%e5%8e%9f%e5%9b%a0-1>原因<span class=pilcrow>&nbsp;¶</span></a></h2><p>不知道，反正就是能執行，只要不要寫成</p><pre><code>public function openGame(Request $request, Response $response, array $args)
+</code></pre><p>就不會報錯，而且不管有沒有加上 Request 兩者型態還是一樣</p><p>還有 <code>$request->getParams();</code> 這個 function 不知道從哪裡蹦出來的，就記下來吧</p><blockquote><p>不過建議用 <code>$request->getQueryParams()</code> 吧</p></blockquote><blockquote><p>覺得可能是 PSR-7 的原因，但是不太確定</p></blockquote></article></div><nav role=navigation class="flex-container bottom-menu"><hr><p><a href=/blog/posts>back</a>
+&#183;
+<a href=/blog/posts>POSTs</a>
+&#183;
+<a href=/blog/about>WHOAMI</a>
+&#183;
+<a href=/blog>main</a></p></nav></main><footer class="flex-container footer">Call me San, a theme for Hugo.</footer></body></html>
