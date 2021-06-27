@@ -11,7 +11,7 @@ pygmentsCodefences       = true
 [params]
     dateform             = "Mon Jan 02, 2006"
     dateformfull         = "Mon Jan 2 2006 15:04:05 EST"
-    favicon              = "sam.ico"
+    favicon              = "gura.ico"
     homepage             = "main"                           # What to call the home page link, link will not be rendered if empty
     footerText           = "Call me San, a theme for Hugo."
 
@@ -21,28 +21,28 @@ pygmentsCodefences       = true
     title                = "o1vv1rnna"
     # rss                = ""
 
-[[params.videoBackground.sources]]
-    source  = "/sample_video.mp4"
-    type    = "video/mp4"
-    poster  = "/background.png"
-[params.videoBackground]
-    overlay = "rgba(0, 0, 0, 0.4)" # optional
+#[[params.videoBackground.sources]]
+#    source  = "/sample_video.mp4"
+#    type    = "video/mp4"
+#    poster  = "/background.png"
+#[params.videoBackground]
+#    overlay = "rgba(0, 0, 0, 0.4)" # optional
 
 [[params.mainMenu]]
     link = "posts"
-    text = "posts"
+    text = "POSTs"
 
-[[params.mainMenu]]
-    link = "gallery"
-    text = "gallery"
+#[[params.mainMenu]]
+#    link = "aiyu"
+#    text = "LILAC"
 
-[[params.mainMenu]]
-    link = "portfolio"
-    text = "portfolio"
+#[[params.mainMenu]]
+#    link = "a"
+#    text = "A"
 
 [[params.mainMenu]]
     link = "about"
-    text = "who am I?"
+    text = "WHOAMI"
 
 [imaging]
     quality = 75
