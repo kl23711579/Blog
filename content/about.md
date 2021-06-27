@@ -1,8 +1,6 @@
 ---
 title: "About"
-date: 2021-06-27T21:24:24+10:00
-draft: true
-showDate: true
+draft: false
 ---
 
 # WHOAMI
