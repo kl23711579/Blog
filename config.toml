@@ -32,9 +32,9 @@ pygmentsCodefences       = true
     link = "posts"
     text = "POSTs"
 
-#[[params.mainMenu]]
-#    link = "aiyu"
-#    text = "LILAC"
+[[params.mainMenu]]
+    link = "aiyu"
+    text = "LILAC"
 
 #[[params.mainMenu]]
 #    link = "a"
